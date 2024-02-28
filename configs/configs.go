@@ -27,7 +27,7 @@ var conf Config
 
 // Initializes the configuration variables
 // using the configs/configs.yaml file
-func LoadConfig(path string) *Config {
+func Init(path string) *Config {
 	yamlFile, err := os.ReadFile(path)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("unable to read config file, error: %v ", err))
