@@ -1,0 +1,95 @@
+openapi: 3.0.1
+info:
+  title: Go URL Shrter
+  description: API for url shortner
+  version: "1.0"
+servers:
+  - url: "http://localhost:8083"
+
+paths:
+  /shorten:
+    post:
+      summary: creates a shortened version of the given URL
+      description: creates a shortened version of the given URL
+      tags:
+        - shorten_url
+      operationId: create_shortened_url
+      responses:
+        "201":
+          $ref: "#/components/responses/createdResponse"
+        "400":
+          $ref: "#/components/responses/badRequestError"
+        "500":
+          $ref: "#/components/responses/serverError"
+  /{shortenend}:
+    parameters:
+      - $ref: "#/components/parameters/shortened"
+    get:
+      summary: redirects to original version of a shortened url
+      description: redirects to original version of a shortened url
+      tags:
+        - shorten_url
+      operationId: redirects_to_original_url
+      responses:
+        "301":
+          description: Successfully redirects to original url
+        "404":
+          $ref: "#/components/responses/notFoundError"
+        "400":
+          $ref: "#/components/responses/badRequestError"
+        "500":
+          $ref: "#/components/responses/serverError"
+
+
+components:
+  parameters:
+    shortened:
+      name: shortened
+      description: "a shortened representaion of a url"
+      in: path
+      required: true
+      schema:
+        type: string
+      example: ls56nfe
+
+  responses:
+    badRequestError:
+      description: "Bad Request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+    notFoundError:
+      description: "Not Found"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+    serverError:
+      description: "Error occured on the server. Could be as a result of invalid request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "internal Server Error"
+    createdResponse:
+      description: "Response for Successful creation of a shortened url"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              shortened_url:
+                type: string
+                example: "7895a3f"
