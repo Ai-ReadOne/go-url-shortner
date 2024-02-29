@@ -18,7 +18,7 @@ func NewController(service service.UrlService) *Controller {
 
 func (c *Controller) CreateShortenedUrl(ctx *gin.Context) {
 	type originalUrl struct {
-		Url string `json:"url"`
+		Url string `json:"url" binding:"required,url"`
 	}
 
 	var original originalUrl
@@ -39,7 +39,7 @@ func (c *Controller) CreateShortenedUrl(ctx *gin.Context) {
 
 func (c *Controller) GetOriginalUrl(ctx *gin.Context) {
 	type shortenedUrl struct {
-		Url string `uri:"shortened"`
+		Url string `uri:"shortened" binding:"required,shortUrlLenght"`
 	}
 
 	var shortened shortenedUrl

@@ -1,9 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Url struct {
-	ShortenedUrl string    `json:"shortened_url"`
-	OriginalUrl  string    `json:"original_url"`
+	ShortenedUrl string    `json:"shortened_url" validate:"min=7,max=7"`
+	OriginalUrl  string    `json:"original_url" binding:"url"`
 	CreatedAt    time.Time `json:"created_at"`
 }

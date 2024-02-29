@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
 	"fmt"
 
 	"github.com/ai-readone/go-url-shortner/internal/models"
@@ -30,7 +31,7 @@ func (s *Service) urlShortener(url string) (string, error) {
 	sh := sha256.New()
 	_, err := sh.Write([]byte(url))
 	if err != nil {
-		return "", err
+		return "", errors.New(fmt.Sprintf("error while shortening url, Error: %s", err))
 	}
 
 	// generate a random 8-byte string,
@@ -39,7 +40,7 @@ func (s *Service) urlShortener(url string) (string, error) {
 	randomBytes := make([]byte, 8)
 	_, err = rand.Read(randomBytes)
 	if err != nil {
-		return "", err
+		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
 	fmt.Print(randomBytes)
 
@@ -66,13 +67,13 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 		return existing.ShortenedUrl, nil
 	}
 	if err != gorm.ErrRecordNotFound {
-		return "", err
+		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
 
 	// generate a shortened_url for the provided url
 	shortenedUrl, err := s.urlShortener(url)
 	if err != nil {
-		return "", err
+		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
 
 	data := models.Url{
@@ -89,7 +90,7 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 			return s.CreateShortenedUrl(ctx, url)
 		}
 
-		return "", err
+		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
 
 	return shortenedUrl, nil
@@ -98,7 +99,7 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 func (s *Service) GetOriginalUrl(ctx context.Context, ShortenedUrl string) (string, error) {
 	url, err := s.store.GetOriginalUrl(ctx, ShortenedUrl)
 	if err != nil {
-		return "", err
+		return "", errors.New(fmt.Sprintf("unexpected error while redirecting to original url, Error: %s", err))
 	}
 
 	return url.OriginalUrl, nil

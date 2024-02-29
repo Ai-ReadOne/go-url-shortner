@@ -6,14 +6,17 @@ import (
 	"github.com/ai-readone/go-url-shortner/configs"
 	"github.com/ai-readone/go-url-shortner/internal/controller"
 	"github.com/ai-readone/go-url-shortner/internal/database"
+	"github.com/ai-readone/go-url-shortner/internal/models"
 	"github.com/ai-readone/go-url-shortner/internal/service"
 	"github.com/ai-readone/go-url-shortner/internal/store"
 	"github.com/ai-readone/go-url-shortner/logger"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/pkg/errors"
 )
 
 func RegisterRoutes(conf *configs.Config) *gin.Engine {
+	binding.Validator = new(models.DefaultValidator)
 
 	router := gin.Default()
 	router.MaxMultipartMemory = 2 << 20 // 2 KiB
