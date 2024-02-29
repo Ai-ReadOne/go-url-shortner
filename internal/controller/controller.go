@@ -34,7 +34,7 @@ func (c *Controller) CreateShortenedUrl(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, gin.H{"shortened_url": shortenedUrl})
+	ctx.JSON(http.StatusCreated, gin.H{"shortened_url": shortenedUrl})
 }
 
 func (c *Controller) GetOriginalUrl(ctx *gin.Context) {

@@ -52,13 +52,6 @@ func (s *Service) urlShortener(url string) (string, error) {
 }
 
 func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, error) {
-	// checks the url for trailing slash,
-	// removes the trailing slash if present.
-	// this helps treat url w/o trailing slash as same.
-	if url[len(url)-1] == '/' {
-		url = url[:len(url)-2]
-	}
-
 	// checks if the url has been previoulsy shortened,
 	// if yes retrieves and return the existing shotened url
 	// if no, creates a new shortened url and saves it in the database.
@@ -70,6 +63,10 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
 
+	return s.saveShortenedURL(ctx, url)
+}
+
+func (s *Service) saveShortenedURL(ctx context.Context, url string) (string, error) {
 	// generate a shortened_url for the provided url
 	shortenedUrl, err := s.urlShortener(url)
 	if err != nil {
@@ -87,7 +84,7 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 		// since the original_url has been confirmed not to exist,
 		// if true I recursively try to generate and store a unique shrotened url.
 		if err == gorm.ErrDuplicatedKey {
-			return s.CreateShortenedUrl(ctx, url)
+			return s.saveShortenedURL(ctx, url)
 		}
 
 		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))

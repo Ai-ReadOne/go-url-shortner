@@ -20,7 +20,7 @@ type DefaultValidator struct {
 // this validator parses the url reieved,
 // and marks it as invalid if the there is no host(example: perizer.com) in the url
 var urlValidation validator.Func = func(fl validator.FieldLevel) bool {
-	u, err := url.Parse(fl.Field().String())
+	u, err := url.ParseRequestURI(fl.Field().String())
 	if err != nil {
 		logger.Error(err)
 		return false
