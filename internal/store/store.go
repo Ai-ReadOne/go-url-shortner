@@ -9,7 +9,7 @@ import (
 
 type UrlStore interface {
 	CreateShortenedUrl(ctx context.Context, url *models.Url) error
-	GetShortenedUrl(ctx context.Context, shortenedUrl string) (*models.Url, error)
+	GetOriginalUrl(ctx context.Context, shortenedUrl string) (*models.Url, error)
 	GetExistingShortenedUrl(ctx context.Context, orignalUrl string) (*models.Url, error)
 }
 
@@ -34,7 +34,7 @@ func (s *Store) CreateShortenedUrl(ctx context.Context, url *models.Url) error {
 // retrieves a url record from the database,
 //
 //	using the shortened version provided by the user.
-func (s *Store) GetShortenedUrl(ctx context.Context, shortenedUrl string) (*models.Url, error) {
+func (s *Store) GetOriginalUrl(ctx context.Context, shortenedUrl string) (*models.Url, error) {
 	url := &models.Url{}
 	result := s.pgClient.Model(url).First(url, "shortened_url = ?", shortenedUrl).WithContext(ctx)
 	if result.Error != nil {

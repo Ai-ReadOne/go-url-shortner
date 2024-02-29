@@ -34,10 +34,10 @@ func RegisterRoutes(conf *configs.Config) *gin.Engine {
 			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, accept, origin, Cache-Control")
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET")
 
-			if c.Request.Method != "POST" && c.Request.Method != "GET" {
-				c.AbortWithStatus(405)
-				return
-			}
+			// if c.Request.Method != "POST" && c.Request.Method != "GET" {
+			// 	c.AbortWithStatus(405)
+			// 	return
+			// }
 
 			c.Next()
 		}
@@ -50,7 +50,8 @@ func RegisterRoutes(conf *configs.Config) *gin.Engine {
 	urlService := service.NewService(urlStore)
 	urlController := controller.NewController(urlService)
 
-	router.POST("/", urlController.CreateShortenedUrl)
+	router.POST("/shorten", urlController.CreateShortenedUrl)
+	router.GET("/:shortened", urlController.GetOriginalUrl)
 
 	logger.Info("routes registered successfully!")
 

@@ -14,6 +14,7 @@ import (
 
 type UrlService interface {
 	CreateShortenedUrl(ctx context.Context, url string) (string, error)
+	GetOriginalUrl(ctx context.Context, ShortenedUrl string) (string, error)
 }
 
 type Service struct {
@@ -92,4 +93,13 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 	}
 
 	return shortenedUrl, nil
+}
+
+func (s *Service) GetOriginalUrl(ctx context.Context, ShortenedUrl string) (string, error) {
+	url, err := s.store.GetOriginalUrl(ctx, ShortenedUrl)
+	if err != nil {
+		return "", err
+	}
+
+	return url.OriginalUrl, nil
 }
