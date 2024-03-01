@@ -40,4 +40,4 @@ migrate up:
 migrate -database ${POSTGRES_URL} -path internal/db/migrations up
 ```
 
-### Note: if you do not wish to use the golang-migrate package, you can copy and past the contents in [migrations folder](../internal/database/migrations) 
+### Note: if you do not wish to use the golang-migrate package, you can copy and past the migrations in [migrations folder](../internal/database/migrations) in your postgres terminal or PGAdmin

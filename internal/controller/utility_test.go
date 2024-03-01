@@ -30,6 +30,8 @@ func getRouter() *gin.Engine {
 }
 
 // recreates error reporter middleware to be used for test
+// this is duplicated because import the errorReporterMiddleware
+// from app package will lead to import cycle
 func errorReporterMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()

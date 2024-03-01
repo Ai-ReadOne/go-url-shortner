@@ -13,7 +13,7 @@ follow the instructions in [docs/migrations.md](docs/migrations.md) to apply the
 ## Run Project
 
 ```
-run main.go --config "configs/configs.yaml"
+go run main.go --config "configs/configs.yaml"
 ```
 
 ## API documentation

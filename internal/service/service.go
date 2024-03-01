@@ -42,7 +42,6 @@ func (s *Service) urlShortener(url string) (string, error) {
 	if err != nil {
 		return "", errors.New(fmt.Sprintf("unexpected error while shortening url, Error: %s", err))
 	}
-	fmt.Print(randomBytes)
 
 	// encode the hash output to base64 format,
 	// return the first 7 characters of the string,
@@ -66,6 +65,10 @@ func (s *Service) CreateShortenedUrl(ctx context.Context, url string) (string, e
 	return s.saveShortenedURL(ctx, url)
 }
 
+// this function is abstracted from CreateShortenedUrl
+// due to the tendency of a recursive action in the possible but unlikely scenario
+// where the generated shortened url does not exist,
+// as it is not efficient to recursively carry out all the actions.
 func (s *Service) saveShortenedURL(ctx context.Context, url string) (string, error) {
 	// generate a shortened_url for the provided url
 	shortenedUrl, err := s.urlShortener(url)
@@ -96,7 +99,11 @@ func (s *Service) saveShortenedURL(ctx context.Context, url string) (string, err
 func (s *Service) GetOriginalUrl(ctx context.Context, ShortenedUrl string) (string, error) {
 	url, err := s.store.GetOriginalUrl(ctx, ShortenedUrl)
 	if err != nil {
-		return "", errors.New(fmt.Sprintf("unexpected error while redirecting to original url, Error: %s", err))
+		if err == gorm.ErrRecordNotFound {
+			return "", err
+		} else {
+			return "", errors.New(fmt.Sprintf("unexpected error while redirecting to original url, Error: %s", err))
+		}
 	}
 
 	return url.OriginalUrl, nil
