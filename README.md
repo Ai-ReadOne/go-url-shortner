@@ -2,8 +2,8 @@
 ## Configuration setup
 
 create a new config.yaml file from the configs.yaml.tmpl file in the configs subdirectory
-### Server:  specify the port you want to run the project on
-### Database:  specify the database credentials you want to use for the credentials 
+1. Server:  specify the port you want to run the project on
+2. Database:  specify the database credentials you want to use for the credentials 
 
 
 ## Run migrations
